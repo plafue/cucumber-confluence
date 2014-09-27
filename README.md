@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/plafuro/cucumber-confluence.svg?branch=master)](http://travis-ci.org/plafuro/cucumber-confluence)
 # cucumber-confluence
 
 The aim of this project is to provide a set of tools to automate tasks that involve gherkin/cucumber Feature files as an output and Confluence as a consumer of this output.
