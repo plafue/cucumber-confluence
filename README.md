@@ -18,32 +18,36 @@ usage: [-f FILEORDIR] [-nt,--no-tags] [-o,--output-dir DIR]
 </pre>
 
 ```xml
-    <plugins>
-      <plugin>
-        <groupId>info.quckes.cucumber-confluence</groupId>
-        <artifactId>cucumber-confluence-maven-plugin</artifactId>
-        <version>1.0-SNAPSHOT</version>
-        <executions>
-          <execution>
-            <id>parse</id>
-            <goals>
-              <goal>parse</goal> <!-- Currently only the goal "parse" is provided. The plugin is not hooked to any lifecycle phase. Use as you wish. -->
-            </goals>
-          </execution>
-          <configuration>  <!-- All settings are optional -->
-            <outputDirectory>
-               <!-- Output directory.  All output files match the name of the source, but with the suffix .markup 
-                    Default: ${project.build.directory}/cucumber-confluence" (aka "target/cucumber-confluence") -->
-             </outputDirectory>
-            <inputFile> 
-              <!-- If a directory is given, it will be recursively searched for "*.feature" files. 
-                   Default: ${basedir} (aka the directory where your pom.xml is located) -->
-            </inputFile>
-            <ignoreTags>
-              <!-- Whether Tags are ignored. Default: false -->
-            </ignoreTags>
-          </configuration>
-        </executions>
-      </plugin>
-    </plugins>
+<plugins>
+  <plugin>
+    <groupId>info.quckes.cucumber-confluence</groupId>
+    <artifactId>cucumber-confluence-maven-plugin</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <executions>
+      <execution>
+        <id>parse</id>
+        <goals>
+          <goal>parse</goal> 
+          <!-- Currently only the goal "parse" is provided. 
+          The plugin is not hooked to any lifecycle phase. Use as you see fit. -->
+        </goals>
+      </execution>
+      <configuration>  <!-- All settings are optional -->
+        <outputDirectory>
+           <!-- Output directory.  All output files match the name of the source, 
+                but with the suffix .markup instead of .feature.
+                Default: ${project.build.directory}/cucumber-confluence" 
+                (aka "target/cucumber-confluence") -->
+         </outputDirectory>
+        <inputFile> 
+          <!-- If a directory, all "*.feature" files within it will be parsed. 
+               Default: ${basedir} (aka location of your pom.xml) -->
+        </inputFile>
+        <ignoreTags>
+          <!-- Whether Tags are ignored. Default: false -->
+        </ignoreTags>
+      </configuration>
+    </executions>
+  </plugin>
+</plugins>
 ```
