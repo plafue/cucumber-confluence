@@ -18,7 +18,7 @@ public class Main {
         parse(features,formatterOptions,options.outputDir());
     }
 
-    private static void parse(List<File> features, MarkupFormatter.Options formatterOptions, File outputDir) throws IOException {
+    public static void parse(List<File> features, MarkupFormatter.Options formatterOptions, File outputDir) throws IOException {
 
         for(File feature : features){
             File outputFile = new File(outputDir, feature.getName().replace(".feature", ".markup"));

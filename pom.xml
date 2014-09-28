@@ -12,6 +12,7 @@
     <modules>
         <module>cli</module>
         <module>formatter</module>
+        <module>maven-plugin</module>
     </modules>
 
     <properties>

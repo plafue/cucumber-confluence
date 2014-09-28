@@ -3,7 +3,7 @@
 
 The aim of this project is to provide a set of tools to automate tasks that involve gherkin/cucumber Feature files as an output and Confluence as a consumer of this output.
 
-At the moment there is the posibility to transform feature files to confluence markup through a command line interface.
+At the moment there is the posibility to transform feature files to confluence markup through a command line interface or a maven plugin.
 
 <pre>
 # java -jar cucumber-confluence-cli-1.0-SNAPSHOT.jar 
@@ -16,3 +16,34 @@ usage: [-f FILEORDIR] [-nt,--no-tags] [-o,--output-dir DIR]
  -f,--file          File to read or path to scan for '.feature' files.
                     Default is working directory
 </pre>
+
+```xml
+    <plugins>
+      <plugin>
+        <groupId>@project.groupId@</groupId>
+        <artifactId>@project.artifactId@</artifactId>
+        <version>@project.version@</version>
+        <executions>
+          <execution>
+            <id>parse</id>
+            <goals>
+              <goal>parse</goal> <!-- Currently only the goal "parse" is provided. The plugin is not hooked to any lifecycle phase. Use as you wish. -->
+            </goals>
+          </execution>
+          <configuration>  <!-- All settings are optional -->
+            <outputDirectory>
+               <!-- Output directory.  All output files match the name of the source, but with the suffix .markup 
+                    Default: ${project.build.directory}/cucumber-confluence" (aka "target/cucumber-confluence") -->
+             </outputDirectory>
+            <inputFile> 
+              <!-- If a directory is given, it will be recursively searched for "*.feature" files. 
+                   Default: ${basedir} (aka the directory where your pom.xml is located) -->
+            </inputFile>
+            <ignoreTags>
+              <!-- Whether Tags are ignored. Default: false -->
+            </ignoreTags>
+          </configuration>
+        </executions>
+      </plugin>
+    </plugins>
+```
