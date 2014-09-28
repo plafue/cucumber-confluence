@@ -47,6 +47,11 @@ usage: [-f FILEORDIR] [[-nt]|[-j SERVERNAME]] [-o DIR]
         <ignoreTags>
           <!-- Whether Tags are ignored. Default: false -->
         </ignoreTags>
+        <jiraServer>
+          <!-- When set, implicitly activates the parsing of Jira issues when used 
+          in tags, eg (@PLB-122). This option and ignoreTags are mutually exclusive.
+          Default: null -->
+        </jiraServer>
       </configuration>
     </executions>
   </plugin>

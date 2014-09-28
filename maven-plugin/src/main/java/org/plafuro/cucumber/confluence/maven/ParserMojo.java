@@ -27,19 +27,32 @@ public class ParserMojo extends AbstractMojo {
     @Parameter(property = "ignoreTags", required = false)
     private boolean ignoreTags;
 
+    @Parameter(property = "jiraServer", required = false)
+    private String jiraServer;
+
     public void execute() throws MojoExecutionException {
         createOutputDirIfNeeded();
         FeatureFinder finder = new FeatureFinder(inputFile);
         List<File> features = findFeatures(finder);
-        MarkupFormatter.Options formatterOptions = new MarkupFormatter.Options(!ignoreTags);
+        MarkupFormatter.Options formatterOptions = buildOptionsObject();
         run(features, formatterOptions);
+    }
+
+    private MarkupFormatter.Options buildOptionsObject() {
+        if(ignoreTags && jiraServer != null) {
+            throw new IllegalStateException("The options ignoreTags and jiraServer are mutually exclusive");
+        } else if (jiraServer != null){
+            return new MarkupFormatter.Options(jiraServer);
+        } else {
+            return new MarkupFormatter.Options(!ignoreTags);
+        }
     }
 
     private void run(List<File> features, MarkupFormatter.Options formatterOptions) throws MojoExecutionException {
         try {
             parse(features, formatterOptions, outputDirectory);
         } catch (IOException e) {
-            throw new MojoExecutionException("A problem occured while parsing feature files", e);
+            throw new MojoExecutionException("A problem occurred while parsing feature files", e);
         }
     }
 
@@ -48,7 +61,7 @@ public class ParserMojo extends AbstractMojo {
         try {
             features = finder.findFeatures();
         } catch (IOException e) {
-            throw new MojoExecutionException("A Problem occured while looking for features to parse", e);
+            throw new MojoExecutionException("A Problem occurred while looking for features to parse", e);
         }
         return features;
     }
