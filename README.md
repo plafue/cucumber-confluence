@@ -20,9 +20,9 @@ usage: [-f FILEORDIR] [-nt,--no-tags] [-o,--output-dir DIR]
 ```xml
     <plugins>
       <plugin>
-        <groupId>@project.groupId@</groupId>
-        <artifactId>@project.artifactId@</artifactId>
-        <version>@project.version@</version>
+        <groupId>info.quckes.cucumber-confluence</groupId>
+        <artifactId>cucumber-confluence-maven-plugin</artifactId>
+        <version>1.0-SNAPSHOT</version>
         <executions>
           <execution>
             <id>parse</id>
