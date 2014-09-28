@@ -17,6 +17,7 @@ import static gherkin.util.FixJava.map;
 public class MarkupFormatter implements Formatter {
 
 
+    private static final String NEWLINE = "\\r\\n|\\r|\\n";
     private final NiceAppendable out;
     private final Options options;
 
@@ -44,9 +45,8 @@ public class MarkupFormatter implements Formatter {
     @Override
     public void feature(Feature feature) {
         out.println(getFormat(HEADER1).text(feature.getName()));
-        List<Tag> tags = feature.getTags();
-        printTags(tags);
-        String description = feature.getDescription().replaceAll("\\r\\n|\\r|\\n", " ");
+        printTags(feature.getTags());
+        String description = feature.getDescription().replaceAll(NEWLINE, " ");
         if (!description.isEmpty()) {
             out.println(description);
         }
