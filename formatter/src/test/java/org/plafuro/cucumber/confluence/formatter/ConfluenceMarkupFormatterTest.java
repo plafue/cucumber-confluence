@@ -22,7 +22,7 @@ public class ConfluenceMarkupFormatterTest {
         String basicFeatureDescription = readFeature("completeFeatureDescription");
         String[] expectedOutput = readExpectedMarkup("completeFeatureDescriptionWithTags");
 
-        List<String> formatterOutput = doFormatter(basicFeatureDescription, true);
+        List<String> formatterOutput = doFormatter(basicFeatureDescription, new MarkupFormatter.Options(true));
 
         // looping through the collection to get junit to provide helpful output
 
@@ -35,7 +35,18 @@ public class ConfluenceMarkupFormatterTest {
         String basicFeatureDescription = readFeature("completeFeatureDescription");
         String[] expectedOutput = readExpectedMarkup("completeFeatureDescriptionWithoutTags");
 
-        List<String> formatterOutput = doFormatter(basicFeatureDescription, false);
+        List<String> formatterOutput = doFormatter(basicFeatureDescription, new MarkupFormatter.Options(false));
+
+        assertListEquality(expectedOutput, formatterOutput);
+    }
+
+    @Test
+    public void completeFeatureShouldBeFormattedAsDesiredWithJiraMacroActive() throws IOException {
+
+        String basicFeatureDescription = readFeature("completeFeatureDescription");
+        String[] expectedOutput = readExpectedMarkup("completeFeatureDescriptionWithJIraMacroActive");
+
+        List<String> formatterOutput = doFormatter(basicFeatureDescription, new MarkupFormatter.Options(true,"someServer"));
 
         assertListEquality(expectedOutput, formatterOutput);
     }
@@ -57,13 +68,13 @@ public class ConfluenceMarkupFormatterTest {
         return basicFeatureDescriptionMarkup.split(System.getProperty("line.separator"));
     }
 
-    private List<String> doFormatter(String feature, boolean renderTags) throws IOException {
+    private List<String> doFormatter(String feature, MarkupFormatter.Options options) throws IOException {
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         PrintStream out = new PrintStream(byteArrayOutputStream);
 
         Formatter formatter;
-        formatter = new MarkupFormatter(out, new MarkupFormatter.Options(renderTags));
+        formatter = new MarkupFormatter(out, options);
         Parser parser = new Parser(formatter);
         parser.parse(feature, "", 0);
         formatter.close();

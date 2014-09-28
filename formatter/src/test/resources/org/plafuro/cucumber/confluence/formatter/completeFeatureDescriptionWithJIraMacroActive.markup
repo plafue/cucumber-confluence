@@ -6,7 +6,7 @@ h2. Some prerequisites..
 |{color:#666666}*Given*{color} |somebody is there |
 |{color:#666666}*And*{color} |they do their thing |
 h2. Some determinable business situation
-{info} This section is tagged as *_PLB-169_*{info}
+<ac:macro ac:name="jira"><ac:parameter ac:name="server">someServer</ac:parameter}<ac:parameter ac:name="key">PLB-169</ac:parameter}</ac:macro>
 
 |{color:#666666}*Given*{color} |some precondition |
 |{color:#666666}*And*{color} |some other precondition |

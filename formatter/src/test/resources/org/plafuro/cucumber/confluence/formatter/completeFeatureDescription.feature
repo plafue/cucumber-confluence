@@ -9,6 +9,7 @@ Feature: Some terse yet descriptive text of what is desired
    Given somebody is there
      And they do their thing
 
+ @PLB-169
  Scenario: Some determinable business situation
    Given some precondition
      And some other precondition

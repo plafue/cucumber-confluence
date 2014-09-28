@@ -7,6 +7,7 @@ import gherkin.formatter.model.*;
 import gherkin.util.Mapper;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.plafuro.cucumber.confluence.formatter.Markup.Formats.*;
@@ -22,6 +23,7 @@ public class MarkupFormatter implements Formatter {
 
 
     private static final String NEWLINE = "\\r\\n|\\r|\\n";
+    public static final String JIRA_ISSUE_ID_FORMAT = "@[A-Z][A-Z]+-[0-9]{1,9}";
     private final NiceAppendable out;
     private final Options options;
     private final Macros macros;
@@ -41,7 +43,11 @@ public class MarkupFormatter implements Formatter {
         this.out = new NiceAppendable(out);
         this.options = options;
         this.formats = new Markup();
-        this.macros = new Macros();
+        if (options.isJiraTicketParsingInTags()) {
+            this.macros = new Macros(options.getJiraServer());
+        } else {
+            this.macros = new Macros();
+        }
     }
 
     @Override
@@ -168,7 +174,7 @@ public class MarkupFormatter implements Formatter {
     private String renderNestedTableWithinPanelInSecondColumn(List<DataTableRow> rows) {
         return getFormat(TABLE_ROW).text(
                 getFormat(TABLE_CELL).text("") +
-                getFormat(TABLE_CELL).text(getMacro(PANEL).text(renderTable(rows))));
+                        getFormat(TABLE_CELL).text(getMacro(PANEL).text(renderTable(rows))));
     }
 
     private boolean hasNestedTable(Step step) {
@@ -218,21 +224,78 @@ public class MarkupFormatter implements Formatter {
     }
 
     private void printTags(List<Tag> tags) {
-        if (tags.isEmpty() || !options.isTagRenderingActive()) return;
-        out.println(getMacro(INFO).text(
-                " This section is tagged as " +
-                        join(map(tags, tagNameMapper), ", ")));
+        if (tags.isEmpty() || !options.isTagRenderingActive() ||
+                (options.isJiraTicketParsingInTags() && options.jiraServer == null )) return;
+
+        List<Tag> jiraIds = Collections.EMPTY_LIST;
+
+        if (options.isJiraTicketParsingInTags()) {
+            jiraIds = findJiraIdsAndExtractFromOriginalList(tags);
+        }
+
+        if(!tags.isEmpty()) {
+            out.println(getMacro(INFO).text(
+                    " This section is tagged as " +
+                            join(map(tags, tagNameMapper), ", ")));
+        }
+
+        if(!jiraIds.isEmpty()) {
+            printJiraMacros(jiraIds);
+        }
+    }
+
+    private void printJiraMacros(List<Tag> jiraIds) {
+        out.println(join(map(jiraIds, new Mapper<Tag, String>() {
+            @Override
+            public String map(Tag tag) {
+                return getMacro(JIRA).text(tag.getName().replace("@", ""));
+            }
+        }), System.lineSeparator()));
+    }
+
+    private List<Tag> findJiraIdsAndExtractFromOriginalList(List<Tag> tags) {
+        List<Tag> jiraIds = new ArrayList<Tag>();
+        for (Tag tag : tags) {
+            if (tag.getName().matches(JIRA_ISSUE_ID_FORMAT)) {
+                jiraIds.add(tag);
+            }
+        }
+        tags.removeAll(jiraIds);
+        return jiraIds;
     }
 
     public static class Options {
         private boolean tagRenderingActive;
+        private boolean jiraTicketParsingInTags;
+        private String jiraServer;
 
-        public Options(boolean TagRenderingActive) {
-            this.tagRenderingActive = TagRenderingActive;
+        public Options(boolean tagRenderingActive){
+            this.tagRenderingActive = tagRenderingActive;
+        }
+
+        public Options(boolean tagRenderingActive, String jiraServer) {
+            if (jiraTicketParsingInTags && jiraServer == null) {
+                throw new IllegalStateException("If tag rendering is active, a Jira server must be provided");
+            }
+            this.tagRenderingActive = tagRenderingActive;
+            this.jiraTicketParsingInTags = true;
+            this.jiraServer = jiraServer;
         }
 
         public boolean isTagRenderingActive() {
             return tagRenderingActive;
+        }
+
+        public String getJiraServer() {
+            return jiraServer;
+        }
+
+        public void setJiraServer(String jiraServer) {
+            this.jiraServer = jiraServer;
+        }
+
+        public boolean isJiraTicketParsingInTags() {
+            return jiraTicketParsingInTags;
         }
     }
 }
