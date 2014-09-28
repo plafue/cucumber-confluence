@@ -273,11 +273,11 @@ public class MarkupFormatter implements Formatter {
             this.tagRenderingActive = tagRenderingActive;
         }
 
-        public Options(boolean tagRenderingActive, String jiraServer) {
-            if (tagRenderingActive && jiraServer == null) {
-                throw new IllegalStateException("If tag rendering is active, a Jira server must be provided");
+        public Options(String jiraServer) {
+            if (jiraServer == null) {
+                throw new IllegalStateException("A Jira server must be provided");
             }
-            this.tagRenderingActive = tagRenderingActive;
+            this.tagRenderingActive = true;
             this.jiraTicketParsingInTags = true;
             this.jiraServer = jiraServer;
         }

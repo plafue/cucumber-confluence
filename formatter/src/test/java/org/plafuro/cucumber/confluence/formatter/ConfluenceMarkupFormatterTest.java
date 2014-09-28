@@ -46,7 +46,7 @@ public class ConfluenceMarkupFormatterTest {
         String basicFeatureDescription = readFeature("completeFeatureDescription");
         String[] expectedOutput = readExpectedMarkup("completeFeatureDescriptionWithJIraMacroActive");
 
-        List<String> formatterOutput = doFormatter(basicFeatureDescription, new MarkupFormatter.Options(true,"someServer"));
+        List<String> formatterOutput = doFormatter(basicFeatureDescription, new MarkupFormatter.Options("someServer"));
 
         assertListEquality(expectedOutput, formatterOutput);
     }
