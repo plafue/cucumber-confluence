@@ -20,7 +20,7 @@ usage: [-f FILEORDIR] [-nt,--no-tags] [-o,--output-dir DIR]
 ```xml
 <plugins>
   <plugin>
-    <groupId>info.quckes.cucumber-confluence</groupId>
+    <groupId>org.plafuro.cucumber-confluence</groupId>
     <artifactId>cucumber-confluence-maven-plugin</artifactId>
     <version>1.0-SNAPSHOT</version>
     <executions>
