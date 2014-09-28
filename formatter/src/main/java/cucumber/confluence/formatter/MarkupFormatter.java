@@ -1,12 +1,16 @@
 package cucumber.confluence.formatter;
 
-import gherkin.formatter.Format;import gherkin.formatter.Formatter;import gherkin.formatter.NiceAppendable;import gherkin.formatter.model.*;
+import gherkin.formatter.Format;
+import gherkin.formatter.Formatter;
+import gherkin.formatter.NiceAppendable;
+import gherkin.formatter.model.*;
 import gherkin.util.Mapper;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static cucumber.confluence.formatter.Markup.Formats.*;
+import static cucumber.confluence.formatter.Macros.Formats.*;
 import static gherkin.util.FixJava.join;
 import static gherkin.util.FixJava.map;
 
@@ -20,8 +24,9 @@ public class MarkupFormatter implements Formatter {
     private static final String NEWLINE = "\\r\\n|\\r|\\n";
     private final NiceAppendable out;
     private final Options options;
+    private final Macros macros;
+    private final Markup formats;
 
-    private Markup formats;
     private List<Step> steps = new ArrayList<Step>();
     private DescribedStatement statement;
     private Mapper<Tag, String> tagNameMapper = new Mapper<Tag, String>() {
@@ -36,6 +41,7 @@ public class MarkupFormatter implements Formatter {
         this.out = new NiceAppendable(out);
         this.options = options;
         this.formats = new Markup();
+        this.macros = new Macros();
     }
 
     @Override
@@ -89,7 +95,7 @@ public class MarkupFormatter implements Formatter {
         printTags(examples.getTags());
         out.println(getFormat(TABLE_HEAD).text(getFormat(TABLE_HEAD_CELL).text(examples.getKeyword() + ": " + examples.getName())));
         out.println(getFormat(TABLE_ROW).text(getFormat(TABLE_CELL).text(
-                getFormat(PANEL).text(renderTable(examples.getRows())))));
+                getMacro(PANEL).text(renderTable(examples.getRows())))));
     }
 
     @Override
@@ -133,7 +139,7 @@ public class MarkupFormatter implements Formatter {
         out.println(
                 formats.get(HEADER2).text(
                         statement.getName().isEmpty() ?
-                                getFormat(COLOR_RED).text(getFormat(ITALICS).text("Undefined section")) :
+                                getMacro(COLOR_RED).text(getFormat(ITALICS).text("Undefined section")) :
                                 statement.getName()
                 ));
 
@@ -151,7 +157,7 @@ public class MarkupFormatter implements Formatter {
         Format bold = getFormat(BOLD);
         out.println(
                 row.text(
-                        cell.text(getFormat(COLOR_DARK_GREY).text(bold.text(step.getKeyword().trim()))) +
+                        cell.text(getMacro(COLOR_DARK_GREY).text(bold.text(step.getKeyword().trim()))) +
                                 cell.text(step.getName().trim())));
 
         if (hasNestedTable(step)) {
@@ -162,7 +168,7 @@ public class MarkupFormatter implements Formatter {
     private String renderNestedTableWithinPanelInSecondColumn(List<DataTableRow> rows) {
         return getFormat(TABLE_ROW).text(
                 getFormat(TABLE_CELL).text("") +
-                getFormat(TABLE_CELL).text(getFormat(PANEL).text(renderTable(rows))));
+                getFormat(TABLE_CELL).text(getMacro(PANEL).text(renderTable(rows))));
     }
 
     private boolean hasNestedTable(Step step) {
@@ -171,6 +177,10 @@ public class MarkupFormatter implements Formatter {
 
     private Format getFormat(Markup.Formats key) {
         return formats.get(key);
+    }
+
+    private Format getMacro(Macros.Formats key) {
+        return macros.get(key);
     }
 
     private String renderTable(List<? extends Row> rows) {
@@ -209,7 +219,7 @@ public class MarkupFormatter implements Formatter {
 
     private void printTags(List<Tag> tags) {
         if (tags.isEmpty() || !options.isTagRenderingActive()) return;
-        out.println(getFormat(INFO).text(
+        out.println(getMacro(INFO).text(
                 " This section is tagged as " +
                         join(map(tags, tagNameMapper), ", ")));
     }

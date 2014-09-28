@@ -12,7 +12,7 @@ import java.util.Map;
 public class Markup implements Formats {
 
     public static enum Formats {
-        BOLD, COLOR_DARK_GREY, COLOR_RED, HEADER1, HEADER2, INFO, ITALICS, PANEL,
+        BOLD, HEADER1, HEADER2, ITALICS,
         TABLE_CELL, TABLE_HEAD, TABLE_HEAD_CELL, TABLE_ROW
     }
 
@@ -21,14 +21,10 @@ public class Markup implements Formats {
         put(Formats.HEADER2, new PrefixingFormat("h2. "));
         put(Formats.ITALICS, new EnclosingFormat("_"));
         put(Formats.BOLD, new EnclosingFormat("*"));
-        put(Formats.COLOR_RED, new Color("red"));
-        put(Formats.COLOR_DARK_GREY, new Color("#666666"));
         put(Formats.TABLE_ROW, new PrefixingFormat("|"));
         put(Formats.TABLE_HEAD, new PrefixingFormat("||"));
         put(Formats.TABLE_HEAD_CELL, new SuffixingFormat("||"));
         put(Formats.TABLE_CELL, new SuffixingFormat(" |"));
-        put(Formats.PANEL, new CurlyBracesEnclosedFormat("panel", "panel"));
-        put(Formats.INFO, new CurlyBracesEnclosedFormat("info", "info"));
     }};
 
     public static class EnclosingFormat implements Format {
@@ -64,27 +60,6 @@ public class Markup implements Formats {
 
         public String text(String text) {
             return text + suffix;
-        }
-    }
-
-    public static class CurlyBracesEnclosedFormat implements Format {
-        private final String openingTagContent;
-        private String closingTagContent;
-
-        public CurlyBracesEnclosedFormat(String openingTagContent, String closingTagContent) {
-            this.openingTagContent = openingTagContent;
-            this.closingTagContent = closingTagContent;
-        }
-
-        public String text(String text) {
-            return "{" + openingTagContent + "}" + text + "{" + closingTagContent + "}";
-        }
-    }
-
-    public static class Color extends CurlyBracesEnclosedFormat {
-
-        public Color(String color) {
-            super("color:" + color, "color");
         }
     }
 
