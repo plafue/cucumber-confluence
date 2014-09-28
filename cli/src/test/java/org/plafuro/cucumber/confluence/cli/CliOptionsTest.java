@@ -1,5 +1,6 @@
 package org.plafuro.cucumber.confluence.cli;
 
+import org.apache.commons.cli.ParseException;
 import org.junit.Test;
 
 import java.io.File;
@@ -44,5 +45,10 @@ public class CliOptionsTest{
         String expectedPath = File.createTempFile("pre", "su").getParent();
         assertEquals(expectedPath,
                 new CliOptions(new String[]{"-o", expectedPath}).outputDir().getAbsolutePath());
+    }
+
+    @Test(expected = ParseException.class)
+    public void noTagsAndJiraServerAreMutuallyExclusive() throws ParseException {
+        new CliOptions(new String[]{"-nt","-j","someServerName"});
     }
 }

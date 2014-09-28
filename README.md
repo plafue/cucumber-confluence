@@ -8,7 +8,8 @@ At the moment there is the posibility to transform feature files to confluence m
 <pre>
 # java -jar cucumber-confluence-cli-1.0-SNAPSHOT.jar 
 
-usage: [-f FILEORDIR] [-nt,--no-tags] [-o,--output-dir DIR]
+usage: [-f FILEORDIR] [[-nt]|[-j SERVERNAME]] [-o DIR]
+ -j,--jira-server    Name of the Jira-Server as it is known to Confluence.
  -o,--output-dir    Path to save markup files to. Default is working
                     directory
  -nt,--no-tags      Wheter tags should be suppressed from the output. Tags
