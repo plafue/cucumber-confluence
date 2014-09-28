@@ -1,9 +1,7 @@
-File expectedGeneratedFile = new File( basedir, "target/cucumber-confluence/completeFeatureDescription.markup");
-List<String> expectedContent = new File( basedir, "completeFeatureDescription.markup").readLines();
+File expectedGeneratedFile = new File(basedir, "target/cucumber-confluence/completeFeatureDescription.markup");
+List<String> expectedContent = new File(basedir, "completeFeatureDescription.markup").readLines();
 
 
 assert expectedGeneratedFile.isFile()
 
- expectedGeneratedFile.eachLine("UTF-8",{ line, lineNr ->
-    assert expectedContent.get(lineNr-1).contentEquals(line)
- })
+expectedGeneratedFile.eachLine("UTF-8", { line, lineNr -> assert expectedContent.get(lineNr - 1).contentEquals(line) })
