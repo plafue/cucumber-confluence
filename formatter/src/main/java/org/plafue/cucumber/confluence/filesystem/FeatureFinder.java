@@ -1,4 +1,4 @@
-package org.plafue.cucumber.confluence.cli;
+package org.plafue.cucumber.confluence.filesystem;
 
 import java.io.File;
 import java.io.FileFilter;

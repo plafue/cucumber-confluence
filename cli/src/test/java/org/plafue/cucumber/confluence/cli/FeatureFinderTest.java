@@ -1,6 +1,7 @@
 package org.plafue.cucumber.confluence.cli;
 
 import org.junit.Test;
+import org.plafue.cucumber.confluence.filesystem.FeatureFinder;
 
 import java.io.File;
 import java.util.Collections;

@@ -17,7 +17,7 @@
     <dependencies>
         <dependency>
             <groupId>org.plafue.cucumber-confluence</groupId>
-            <artifactId>cli</artifactId>
+            <artifactId>formatter</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
