@@ -35,9 +35,9 @@
     </licenses>
 
     <scm>
-        <connection>scm:git:git@github.com:plarfuro/cucumber-confluence.git</connection>
-        <url>scm:git:git@github.com:plafuro/cucumber-confluence.git</url>
-        <developerConnection>scm:git:git@github.com:plafuro/cucumber-confluence.git</developerConnection>
+        <connection>scm:git:git@github.com:plafue/cucumber-confluence.git</connection>
+        <url>scm:git:git@github.com:plafue/cucumber-confluence.git</url>
+        <developerConnection>scm:git:git@github.com:plafue/cucumber-confluence.git</developerConnection>
     </scm>
 
     <build>
