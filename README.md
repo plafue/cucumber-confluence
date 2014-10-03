@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/plafuro/cucumber-confluence.svg?branch=master)](http://travis-ci.org/plafuro/cucumber-confluence)
+[![Build Status](https://travis-ci.org/plafue/cucumber-confluence.svg?branch=master)](http://travis-ci.org/plafue/cucumber-confluence)
 # cucumber-confluence
 
 The aim of this project is to provide a set of tools to automate tasks that involve gherkin/cucumber Feature files as an output and Confluence as a consumer of this output.
@@ -21,7 +21,7 @@ usage: [-f FILEORDIR] [[-nt]|[-j SERVERNAME]] [-o DIR]
 ```xml
 <plugins>
   <plugin>
-    <groupId>org.plafuro.cucumber-confluence</groupId>
+    <groupId>org.plafue.cucumber-confluence</groupId>
     <artifactId>cucumber-confluence-maven-plugin</artifactId>
     <version>1.0-SNAPSHOT</version>
     <executions>
