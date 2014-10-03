@@ -1,9 +1,9 @@
 package org.plafue.cucumber.confluence.cli;
 
+import org.apache.commons.cli.ParseException;
 import org.plafue.cucumber.confluence.formatter.MarkupFormatter;
 import gherkin.parser.Parser;
 import gherkin.util.FixJava;
-import org.apache.commons.cli.*;
 
 import java.io.*;
 import java.util.List;
