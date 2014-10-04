@@ -7,8 +7,11 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>cucumber-confluence-maven-plugin</artifactId>
+    <artifactId>maven-plugin</artifactId>
     <packaging>maven-plugin</packaging>
+
+    <name>cucumber-confluence ${project.artifactId}</name>
+    <description>Maven plugin for the cucumber-confluence tools</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

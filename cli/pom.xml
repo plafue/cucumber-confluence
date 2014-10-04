@@ -12,6 +12,9 @@
     <artifactId>cli</artifactId>
     <packaging>jar</packaging>
 
+    <name>cucumber-confluence ${project.artifactId}</name>
+    <description>Command line interface wrapper for the cucumber-confluence tools</description>
+
     <licenses>
         <license>
             <name>MIT License</name>

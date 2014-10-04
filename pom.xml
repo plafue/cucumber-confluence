@@ -4,10 +4,30 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>9</version>
+    </parent>
+
     <groupId>org.plafue.cucumber-confluence</groupId>
     <artifactId>parent</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+
+    <name>cucumber-confluence ${project.artifactId}</name>
+    <description>
+        The aim of this project is to provide a set of tools to automate tasks
+        that involve gherkin/cucumber Feature files as an input and Confluence as a consumer of this output.
+    </description>
+    <url>https://github.com/plafue/cucumber-confluence</url>
+
+    <developers>
+        <developer>
+            <name>plafü</name>
+            <url>https://github.com/plafue</url>
+        </developer>
+    </developers>
 
     <modules>
         <module>cli</module>
@@ -19,12 +39,6 @@
         <gherkin.version>2.12.2</gherkin.version>
         <junit.version>4.11</junit.version>
     </properties>
-
-    <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>9</version>
-    </parent>
 
     <licenses>
         <license>

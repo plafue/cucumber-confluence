@@ -11,6 +11,11 @@
 
     <artifactId>formatter</artifactId>
 
+    <name>cucumber-confluence ${project.artifactId}</name>
+    <description>Formatter in order to transform gherkin feature files
+        to confluence compatible wiki markup
+    </description>
+
     <licenses>
         <license>
             <name>MIT License</name>
