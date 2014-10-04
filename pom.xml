@@ -57,6 +57,14 @@
                 <artifactId>maven-release-plugin</artifactId>
                 <version>2.5.1</version>
             </plugin>
+            <plugin>
+                <groupId>org.eluder.coveralls</groupId>
+                <artifactId>coveralls-maven-plugin</artifactId>
+                <version>2.2.0</version>
+                <configuration>
+                    <repoToken>${env.coveralls_repo_token}</repoToken>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
