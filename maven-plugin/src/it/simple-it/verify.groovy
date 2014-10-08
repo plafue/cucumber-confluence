@@ -1,5 +1,5 @@
-File expectedGeneratedFile = new File(basedir, "target/cucumber-confluence/completeFeatureDescription.markup");
-List<String> expectedContent = new File(basedir, "completeFeatureDescription.markup").readLines();
+File expectedGeneratedFile = new File(basedir, "target/cucumber-confluence/completeFeatureDescription.xhtml");
+List<String> expectedContent = new File(basedir, "completeFeatureDescription.xhtml").readLines();
 
 
 assert expectedGeneratedFile.isFile()

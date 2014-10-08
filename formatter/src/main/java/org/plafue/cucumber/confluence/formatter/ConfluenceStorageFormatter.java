@@ -10,7 +10,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static org.plafue.cucumber.confluence.formatter.Markup.Formats.*;
+import static org.plafue.cucumber.confluence.formatter.ConfluenceStorageFormat.Formats.*;
+import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
 import static org.plafue.cucumber.confluence.formatter.Macros.Formats.*;
 import static gherkin.util.FixJava.join;
 import static gherkin.util.FixJava.map;
@@ -19,7 +20,7 @@ import static gherkin.util.FixJava.map;
  * This class pretty prints feature files in Confluence Markup (tested with v4.1.22).
  * This class prints "Feature", "Background", and "scenarios" with their tags if any.
  */
-public class MarkupFormatter implements Formatter {
+public class ConfluenceStorageFormatter implements Formatter {
 
 
     private static final String NEWLINE = "\\r\\n|\\r|\\n";
@@ -27,7 +28,7 @@ public class MarkupFormatter implements Formatter {
     private final NiceAppendable out;
     private final Options options;
     private final Macros macros;
-    private final Markup formats;
+    private final ConfluenceStorageFormat formats;
 
     private List<Step> steps = new ArrayList<Step>();
     private DescribedStatement statement;
@@ -39,10 +40,10 @@ public class MarkupFormatter implements Formatter {
         }
     };
 
-    public MarkupFormatter(Appendable out, Options options) {
+    public ConfluenceStorageFormatter(Appendable out, Options options) {
         this.out = new NiceAppendable(out);
         this.options = options;
-        this.formats = new Markup();
+        this.formats = new ConfluenceStorageFormat();
         if (options.isJiraTicketParsingInTags()) {
             this.macros = new Macros(options.getJiraServer());
         } else {
@@ -99,9 +100,9 @@ public class MarkupFormatter implements Formatter {
         out.println();
         printComments(examples.getComments(), " ");
         printTags(examples.getTags());
-        out.println(getFormat(TABLE_HEAD).text(getFormat(TABLE_HEAD_CELL).text(examples.getKeyword() + ": " + examples.getName())));
-        out.println(getFormat(TABLE_ROW).text(getFormat(TABLE_CELL).text(
-                getMacro(PANEL).text(renderTable(examples.getRows())))));
+        out.println(getFormat(TABLE).text(
+                getFormat(TABLE_ROW).text(getFormat(TABLE_HEAD_CELL).text(examples.getKeyword() + ": " + examples.getName())) +
+                        getFormat(TABLE_ROW).text(getFormat(CELL).text(getMacro(PANEL).text(renderTable(examples.getRows()))))));
     }
 
     @Override
@@ -134,9 +135,13 @@ public class MarkupFormatter implements Formatter {
 
     private void printSteps() {
         if (steps.isEmpty()) return;
+
+
+        final StringBuilder tableContents = new StringBuilder();
         while (!steps.isEmpty()) {
-            printStep();
+            printStep(tableContents);
         }
+        out.println(getFormat(TABLE).text(tableContents.toString()));
     }
 
     private void printSectionTitle() {
@@ -145,7 +150,7 @@ public class MarkupFormatter implements Formatter {
         out.println(
                 formats.get(HEADER2).text(
                         statement.getName().isEmpty() ?
-                                getMacro(COLOR_RED).text(getFormat(ITALICS).text("Undefined section")) :
+                                getFormat(RED_FOREGROUND).text(getFormat(ITALICS).text("Undefined section")) :
                                 statement.getName()
                 ));
 
@@ -156,32 +161,33 @@ public class MarkupFormatter implements Formatter {
         statement = null;
     }
 
-    private void printStep() {
+    private void printStep(StringBuilder stringBuilder) {
         Step step = steps.remove(0);
-        Format cell = getFormat(TABLE_CELL);
+        Format keyword = getFormat(CELL_ALIGNED_RIGHT);
+        Format cell = getFormat(CELL);
         Format row = getFormat(TABLE_ROW);
         Format bold = getFormat(BOLD);
-        out.println(
+        stringBuilder.append(
                 row.text(
-                        cell.text(getMacro(COLOR_DARK_GREY).text(bold.text(step.getKeyword().trim()))) +
-                                cell.text(step.getName().trim())));
+                        keyword.text(getFormat(COLOR_DARK_GREY).text(bold.text(step.getKeyword().trim()))) +
+                                cell.text(escapeHtml4(step.getName().trim()))));
 
         if (hasNestedTable(step)) {
-            out.println(renderNestedTableWithinPanelInSecondColumn(step.getRows()));
+            stringBuilder.append(renderNestedTableWithinPanelInSecondColumn(step.getRows()));
         }
     }
 
     private String renderNestedTableWithinPanelInSecondColumn(List<DataTableRow> rows) {
         return getFormat(TABLE_ROW).text(
-                getFormat(TABLE_CELL).text("") +
-                        getFormat(TABLE_CELL).text(getMacro(PANEL).text(renderTable(rows))));
+                getFormat(CELL).text("") +
+                        getFormat(CELL).text(getMacro(PANEL).text(renderTable(rows))));
     }
 
     private boolean hasNestedTable(Step step) {
         return step.getRows() != null;
     }
 
-    private Format getFormat(Markup.Formats key) {
+    private Format getFormat(ConfluenceStorageFormat.Formats key) {
         return formats.get(key);
     }
 
@@ -192,23 +198,23 @@ public class MarkupFormatter implements Formatter {
     private String renderTable(List<? extends Row> rows) {
         if (rows.isEmpty()) return "";
 
-        StringBuilder table = new StringBuilder();
+        Format table = getFormat(TABLE);
+        StringBuilder tableContents = new StringBuilder();
 
         for (int i = 0; i < rows.size(); i++) {
-            Format rowFormat = isHeaderRow(i) ? getFormat(TABLE_HEAD) : getFormat(TABLE_ROW);
-            Format cellFormat = isHeaderRow(i) ? getFormat(TABLE_HEAD_CELL) : getFormat(TABLE_CELL);
-
-            StringBuilder cells = renderCells(rows.get(i), cellFormat);
-            table.append(rowFormat.text(cells.toString())).append("\r\n");
+            Format cellFormat = isHeaderRow(i) ? getFormat(TABLE_HEAD_CELL) : getFormat(CELL);
+            tableContents.append(
+                    getFormat(TABLE_ROW).text(renderCells(rows.get(i), cellFormat).toString())
+            );
         }
 
-        return table.toString();
+        return table.text(tableContents.toString());
     }
 
     private StringBuilder renderCells(Row row, Format cellFormat) {
         StringBuilder cells = new StringBuilder();
         for (String cellContents : row.getCells()) {
-            cells.append(cellFormat.text(cellContents));
+            cells.append(cellFormat.text(escapeHtml4(cellContents)));
         }
         return cells;
     }
@@ -225,7 +231,7 @@ public class MarkupFormatter implements Formatter {
 
     private void printTags(List<Tag> tags) {
         if (tags.isEmpty() || !options.isTagRenderingActive() ||
-                (options.isJiraTicketParsingInTags() && options.jiraServer == null )) return;
+                (options.isJiraTicketParsingInTags() && options.jiraServer == null)) return;
 
         List<Tag> jiraIds = Collections.EMPTY_LIST;
 
@@ -233,13 +239,13 @@ public class MarkupFormatter implements Formatter {
             jiraIds = findJiraIdsAndExtractFromOriginalList(tags);
         }
 
-        if(!tags.isEmpty()) {
+        if (!tags.isEmpty()) {
             out.println(getMacro(INFO).text(
                     " This section is tagged as " +
                             join(map(tags, tagNameMapper), ", ")));
         }
 
-        if(!jiraIds.isEmpty()) {
+        if (!jiraIds.isEmpty()) {
             printJiraMacros(jiraIds);
         }
     }
@@ -269,7 +275,7 @@ public class MarkupFormatter implements Formatter {
         private boolean jiraTicketParsingInTags;
         private String jiraServer;
 
-        public Options(boolean tagRenderingActive){
+        public Options(boolean tagRenderingActive) {
             this.tagRenderingActive = tagRenderingActive;
         }
 

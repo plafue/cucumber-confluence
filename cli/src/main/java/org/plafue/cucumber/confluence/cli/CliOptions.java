@@ -46,7 +46,7 @@ public class CliOptions {
         Option jiraServer = new Option(JIRA_SERVER_SHORT, JIRA_SERVER_LONG, true, "Name of the Jira-Server as it is known to Confluence.");
         options.addOptionGroup(new OptionGroup().addOption(noTags).addOption(jiraServer));
         options.addOption(INPUT_FILE_SHORT, INPUT_FILE_LONG, true, "File to read or path to scan for '.feature' files. Default is working directory");
-        options.addOption(OUTPUT_DIR_SHORT, OUTPUT_DIR_LONG, true, "Path to save markup files to. Default is working directory");
+        options.addOption(OUTPUT_DIR_SHORT, OUTPUT_DIR_LONG, true, "Path to save xhtml files to. Default is working directory");
         try {
             CommandLineParser commandLineParser = new BasicParser();
             return commandLineParser.parse(options, args);

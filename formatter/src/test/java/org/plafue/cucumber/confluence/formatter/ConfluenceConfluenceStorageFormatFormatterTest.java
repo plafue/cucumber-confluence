@@ -12,7 +12,7 @@ import java.util.List;
 import static gherkin.util.FixJava.readResource;
 import static org.junit.Assert.assertEquals;
 
-public class ConfluenceMarkupFormatterTest {
+public class ConfluenceConfluenceStorageFormatFormatterTest {
 
     public static final String RESOURCES_PATH = "/org/plafue/cucumber/confluence/formatter/";
 
@@ -20,9 +20,9 @@ public class ConfluenceMarkupFormatterTest {
     public void completeFeatureShouldBeFormattedAsDesiredWithTags() throws IOException {
 
         String basicFeatureDescription = readFeature("completeFeatureDescription");
-        String[] expectedOutput = readExpectedMarkup("completeFeatureDescriptionWithTags");
+        String[] expectedOutput = readExpectedXhtml("completeFeatureDescriptionWithTags");
 
-        List<String> formatterOutput = doFormatter(basicFeatureDescription, new MarkupFormatter.Options(true));
+        List<String> formatterOutput = doFormatter(basicFeatureDescription, new ConfluenceStorageFormatter.Options(true));
 
         // looping through the collection to get junit to provide helpful output
 
@@ -33,9 +33,9 @@ public class ConfluenceMarkupFormatterTest {
     public void completeFeatureShouldBeFormattedAsDesiredWithoutTags() throws IOException {
 
         String basicFeatureDescription = readFeature("completeFeatureDescription");
-        String[] expectedOutput = readExpectedMarkup("completeFeatureDescriptionWithoutTags");
+        String[] expectedOutput = readExpectedXhtml("completeFeatureDescriptionWithoutTags");
 
-        List<String> formatterOutput = doFormatter(basicFeatureDescription, new MarkupFormatter.Options(false));
+        List<String> formatterOutput = doFormatter(basicFeatureDescription, new ConfluenceStorageFormatter.Options(false));
 
         assertListEquality(expectedOutput, formatterOutput);
     }
@@ -44,9 +44,9 @@ public class ConfluenceMarkupFormatterTest {
     public void completeFeatureShouldBeFormattedAsDesiredWithJiraMacroActive() throws IOException {
 
         String basicFeatureDescription = readFeature("completeFeatureDescription");
-        String[] expectedOutput = readExpectedMarkup("completeFeatureDescriptionWithJIraMacroActive");
+        String[] expectedOutput = readExpectedXhtml("completeFeatureDescriptionWithJIraMacroActive");
 
-        List<String> formatterOutput = doFormatter(basicFeatureDescription, new MarkupFormatter.Options("someServer"));
+        List<String> formatterOutput = doFormatter(basicFeatureDescription, new ConfluenceStorageFormatter.Options("someServer"));
 
         assertListEquality(expectedOutput, formatterOutput);
     }
@@ -63,18 +63,18 @@ public class ConfluenceMarkupFormatterTest {
         return readResource(RESOURCES_PATH + feature + ".feature");
     }
 
-    private String[] readExpectedMarkup(final String featureName) {
-        String basicFeatureDescriptionMarkup = readResource(RESOURCES_PATH + featureName + ".markup");
+    private String[] readExpectedXhtml(final String featureName) {
+        String basicFeatureDescriptionMarkup = readResource(RESOURCES_PATH + featureName + ".xhtml");
         return basicFeatureDescriptionMarkup.split(System.getProperty("line.separator"));
     }
 
-    private List<String> doFormatter(String feature, MarkupFormatter.Options options) throws IOException {
+    private List<String> doFormatter(String feature, ConfluenceStorageFormatter.Options options) throws IOException {
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         PrintStream out = new PrintStream(byteArrayOutputStream);
 
         Formatter formatter;
-        formatter = new MarkupFormatter(out, options);
+        formatter = new ConfluenceStorageFormatter(out, options);
         Parser parser = new Parser(formatter);
         parser.parse(feature, "", 0);
         formatter.close();

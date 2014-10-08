@@ -3,14 +3,14 @@
 
 The aim of this project is to provide a set of tools to automate tasks that involve gherkin/cucumber Feature files as an input and Confluence as a consumer of this output.
 
-At the moment there is the posibility to transform feature files to confluence markup through a command line interface or a maven plugin.
+At the moment there is the possibility to transform feature files to confluence storage format (XHTML) through a command line interface or a maven plugin.
 
 <pre>
 # java -jar cucumber-confluence-cli-1.0-SNAPSHOT.jar 
 
 usage: [-f FILEORDIR] [[-nt]|[-j SERVERNAME]] [-o DIR]
  -j,--jira-server   Name of the Jira-Server as it is known to Confluence.
- -o,--output-dir    Path to save markup files to. Default is working
+ -o,--output-dir    Path to save xhtml files to. Default is working
                     directory
  -nt,--no-tags      Wheter tags should be suppressed from the output. Tags
                     are processed by default
@@ -36,7 +36,7 @@ usage: [-f FILEORDIR] [[-nt]|[-j SERVERNAME]] [-o DIR]
       <configuration>  <!-- All settings are optional -->
         <outputDirectory>
            <!-- Output directory.  All output files match the name of the source, 
-                but with the suffix .markup instead of .feature.
+                but with the suffix .xhtml instead of .feature.
                 Default: ${project.build.directory}/cucumber-confluence" 
                 (aka "target/cucumber-confluence") -->
          </outputDirectory>

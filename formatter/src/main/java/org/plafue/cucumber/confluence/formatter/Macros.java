@@ -7,47 +7,38 @@ import gherkin.formatter.Formats;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Macros implements Formats {
+public class Macros extends ConfluenceStorageFormat {
 
     public static enum Formats {
-        INFO, COLOR_DARK_GREY, COLOR_RED, PANEL, JIRA
+        INFO, PANEL, JIRA
     }
 
     private final Map<Formats, Format> formats;
 
-    public Macros(){
+    public Macros() {
         this.formats = new HashMap<Formats, Format>() {{
-            put(Formats.PANEL, new CurlyBracesEnclosedFormat("panel"));
-            put(Formats.INFO, new CurlyBracesEnclosedFormat("info"));
-            put(Formats.COLOR_RED, new Color("red"));
-            put(Formats.COLOR_DARK_GREY, new Color("#666666"));
+            put(Formats.PANEL, new Macro("panel"));
+            put(Formats.INFO, new Macro("info"));
         }};
     }
 
-    public Macros(final String server){
+    public Macros(final String server) {
         this();
-        if (server == null){
+        if (server == null) {
             throw new IllegalStateException("A server is needed for the Jira Issue Macro to work");
         }
         formats.put(Formats.JIRA, new JiraIssueMacro(server));
     }
 
-    public static class CurlyBracesEnclosedFormat implements Format {
-        private final String openingTagContent;
-        private String closingTagContent;
+    public static class Macro implements Format {
+        private String macroName;
 
-        public CurlyBracesEnclosedFormat(String openingTagContent, String closingTagContent) {
-            this.openingTagContent = openingTagContent;
-            this.closingTagContent = closingTagContent;
-        }
-
-        public CurlyBracesEnclosedFormat(String openingTagContent) {
-            this.openingTagContent = openingTagContent;
-            this.closingTagContent = openingTagContent;
+        public Macro(String macroName) {
+            this.macroName = macroName;
         }
 
         public String text(String text) {
-            return "{" + openingTagContent + "}" + text + "{" + closingTagContent + "}";
+            return new EnclosingFormat("ac:macro", "ac:name=\"" + macroName + "\"").text(text);
         }
     }
 
@@ -59,10 +50,9 @@ public class Macros implements Formats {
         }
 
         public String text(String jiraId) {
-            return "<ac:macro ac:name=\"jira\">" +
-                   "<ac:parameter ac:name=\"server\">" + server + "</ac:parameter}"+
-                   "<ac:parameter ac:name=\"key\">" + jiraId + "</ac:parameter}"+
-                   "</ac:macro>";
+            return new EnclosingFormat("ac:macro", "ac:name=\"jira\"").text(
+                    new EnclosingFormat("ac:parameter", "ac:name=\"server\"").text(server) +
+                    new EnclosingFormat("ac:parameter", "ac:name=\"key\"").text(jiraId));
         }
     }
 
@@ -70,13 +60,6 @@ public class Macros implements Formats {
         Format format = formats.get(Formats.valueOf(key));
         if (format == null) throw new FormatNotFoundException(key);
         return format;
-    }
-
-    public static class Color extends CurlyBracesEnclosedFormat {
-
-        public Color(String color) {
-            super("color:" + color, "color");
-        }
     }
 
     public Format get(Formats key) {
