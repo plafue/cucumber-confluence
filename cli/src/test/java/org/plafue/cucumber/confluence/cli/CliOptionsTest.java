@@ -5,50 +5,50 @@ import org.junit.Test;
 
 import java.io.File;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class CliOptionsTest{
+
+public class CliOptionsTest {
 
     public static final String[] NO_ARGS = new String[]{};
     public static final String WORKING_DIR = System.getProperty("user.dir");
 
     @Test
     public void testNoRenderTags() throws Exception {
-        assertFalse(new CliOptions(new String[]{"-nt"}).renderTags());
-        assertTrue(new CliOptions(NO_ARGS).renderTags());
+        assertThat(new CliOptions(new String[]{"-nt"}).renderTags()).isFalse();
+        assertThat(new CliOptions(NO_ARGS).renderTags()).isTrue();
     }
 
     @Test
     public void testFileToParseOptionMissingLeadsToWorkingDir() throws Exception {
-        assertEquals(WORKING_DIR, new CliOptions(NO_ARGS).fileToParse().getAbsolutePath());
+        assertThat(new CliOptions(NO_ARGS).fileToParse().getAbsolutePath()).isEqualTo(WORKING_DIR);
 
     }
 
     @Test
     public void testFileToParseProvidedIsTakenIntoAccount() throws Exception {
         String expectedPath = File.createTempFile("pre", "su").getParent();
-        assertEquals(expectedPath,
-                new CliOptions(new String[]{"-f", expectedPath}).fileToParse().getAbsolutePath());
+        assertThat(new CliOptions(new String[]{"-f", expectedPath}).fileToParse().getAbsolutePath())
+                .isEqualTo(expectedPath);
 
     }
 
     @Test
     public void testOutputDirMissingLeadsToWorkingDir() throws Exception {
-        assertEquals(WORKING_DIR, new CliOptions(NO_ARGS).outputDir().getAbsolutePath());
+        assertThat(new CliOptions(NO_ARGS).fileToParse().getAbsolutePath())
+                .isEqualTo(WORKING_DIR);
 
     }
 
     @Test
     public void testOutputDirProvidedIsTakenIntoAccount() throws Exception {
         String expectedPath = File.createTempFile("pre", "su").getParent();
-        assertEquals(expectedPath,
-                new CliOptions(new String[]{"-o", expectedPath}).outputDir().getAbsolutePath());
+        assertThat(new CliOptions(new String[]{"-o", expectedPath}).outputDir().getAbsolutePath())
+                .isEqualTo(expectedPath);
     }
 
     @Test(expected = ParseException.class)
     public void noTagsAndJiraServerAreMutuallyExclusive() throws ParseException {
-        new CliOptions(new String[]{"-nt","-j","someServerName"});
+        new CliOptions(new String[]{"-nt", "-j", "someServerName"});
     }
 }
